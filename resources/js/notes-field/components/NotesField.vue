@@ -1,6 +1,16 @@
 <template>
   <div :class="classes">
     <h3 class="text-90 mb-4">{{ field.name }}</h3>
+
+    <note
+      v-for="note in notesToShow"
+      :fullWidth="field.fullWidth"
+      :note="note"
+      :key="note.id"
+      :date-format="dateFormat"
+      @onDeleteRequested="onNoteDeleteRequested"
+    />
+
     <note-input
       v-if="field.addingNotesEnabled"
       @onSubmit="createNote"
@@ -10,15 +20,6 @@
       :fullWidth="field.fullWidth"
       :placeholder="field.placeholder || __('novaNotesField.defaultPlaceholder')"
       :trixEnabled="trixEnabled"
-    />
-
-    <note
-      v-for="note in notesToShow"
-      :fullWidth="field.fullWidth"
-      :note="note"
-      :key="note.id"
-      :date-format="dateFormat"
-      @onDeleteRequested="onNoteDeleteRequested"
     />
 
     <div class="flex justify-center mb-3 mt-3" v-if="hasMoreToShow">
@@ -79,7 +80,7 @@ export default {
       return this.maxToShow && this.notes.length > this.maxToShow;
     },
     classes() {
-      const defaultClasses = 'notes-field bg-20 px-4 pt-4 pb-2 rounded-b-lg overflow-hidden border-b border-40';
+      const defaultClasses = 'notes-field bg-20 px-4 pb-2 rounded-b-lg overflow-hidden border-b border-40';
       return defaultClasses + (this.extraClass ? ` ${this.extraClass}` : '');
     },
   },
