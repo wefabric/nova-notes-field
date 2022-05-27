@@ -1,0 +1,11 @@
+{
+  "novaNotesField.defaultPlaceholder": "Schrijf notitie",
+  "novaNotesField.addNote": "Notitie toevoegen",
+  "novaNotesField.showMoreNotes": "Toon alle notities (:hiddenNoteCount meer)",
+  "novaNotesField.delete": "Verwijder",
+  "novaNotesField.deleteConfirmation": "Weet je het zeker dat je deze notitie wilt verwijderen?",
+  "novaNotesField.cancel": "Annuleren",
+  "novaNotesField.deleteNoteTitle": "Verwijder notitie",
+  "novaNotesField.systemUserAbbreviation": "SYS",
+  "novaNotesField.systemUserName": "Systeem"
+}

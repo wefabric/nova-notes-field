@@ -5,6 +5,8 @@ namespace OptimistDigital\NovaNotesField\Http\Controllers;
 use Laravel\Nova\Nova;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Nette\Utils\Type;
+use OptimistDigital\NovaNotesField\Types;
 
 class NotesController extends Controller
 {
@@ -33,10 +35,11 @@ class NotesController extends Controller
 
         $model = $validationResult['model'];
         $note = $request->input('note');
+        $type = $request->input('type', null);
 
         if (empty($note)) return response(['errors' => ['note' => 'required']], 400);
 
-        $model->addNote($note, true, false);
+        $model->addNote($note, true, false, $type);
 
         return response('', 204);
     }
@@ -92,5 +95,13 @@ class NotesController extends Controller
             'errors' => $errors,
             'model' => isset($model) ? $model : null,
         ];
+    }
+
+    public function getTypes()
+    {
+        return response()->json([
+            'types' => Types::get()->toArray(),
+            'default' => Types::default()
+        ]);
     }
 }

@@ -34,6 +34,8 @@
 
       <!-- Content -->
       <p v-html="note.text" class="whitespace-pre-wrap"></p>
+
+      <span v-if="note.type" class="text-xs text-80 mt-2 inline-block">Type: {{ note.type_label }}</span>
     </div>
   </div>
 </template>

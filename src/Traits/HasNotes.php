@@ -3,25 +3,37 @@
 namespace OptimistDigital\NovaNotesField\Traits;
 
 use Illuminate\Support\Facades\Auth;
+use OptimistDigital\NovaNotesField\Exceptions\UndefinedTypeException;
 use OptimistDigital\NovaNotesField\NotesFieldServiceProvider;
+use OptimistDigital\NovaNotesField\Types;
 
 trait HasNotes
 {
     /**
-     * Creates a new note and attaches it to the model.
-     *
      * @param string $note The note text which can contain raw HTML.
      * @param bool $user Enables or disables the use of `Auth::user()` to set as the creator.
      * @param bool $system Defines whether the note is system created and can be deleted or not.
-     * @return \OptimistDigital\NovaNotesField\Models\Note
-     **/
-    public function addNote($note, $user = true, $system = true)
+     * @param string|null $type optional not type.
+     * @return \Illuminate\Database\Eloquent\Model
+     * @throws UndefinedTypeException
+     */
+    public function addNote($note, $user = true, $system = true, ?string $type = null)
     {
         $user = $user ? Auth::user() : null;
+
+        if(!$type) {
+            $type = Types::default();
+        }
+
+        if(!Types::get()->get($type)) {
+            throw new UndefinedTypeException(__(':type is undefined', ['type' => $type]));
+        }
+
         return $this->notes()->create([
             'text' => $note,
             'created_by' => isset($user) ? $user->id : null,
             'system' => $system,
+            'type' => $type,
         ]);
     }
 

@@ -3,8 +3,9 @@
     <h3 class="text-90 mb-4">{{ field.name }}</h3>
     <note-input
       v-if="field.addingNotesEnabled"
-      v-model.trim="note"
       @onSubmit="createNote"
+      :types="types"
+      :type="type"
       :loading="loading"
       :fullWidth="field.fullWidth"
       :placeholder="field.placeholder || __('novaNotesField.defaultPlaceholder')"
@@ -51,6 +52,7 @@ export default {
     note: '',
     loading: true,
     notes: [],
+    types: [],
     showDeleteConfirmation: false,
     noteToDelete: void 0,
     maxToShow: 5,
@@ -60,6 +62,7 @@ export default {
   }),
   mounted() {
     this.fetchNotes();
+    this.fetchTypes();
   },
   computed: {
     params() {
@@ -96,11 +99,25 @@ export default {
 
       this.loading = false;
     },
-    async createNote() {
+    async fetchTypes() {
+      this.loading = true;
+
+      const { data } = await Nova.request().get(`/nova-vendor/nova-notes/notes-types`, {
+        params: this.params,
+      });
+
+      if(data) {
+        this.types = data.types;
+        this.type = data.default;
+      }
+
+      this.loading = false;
+    },
+    async createNote(data) {
       this.loading = true;
 
       try {
-        await Nova.request().post(`/nova-vendor/nova-notes/notes`, { note: this.note }, { params: this.params });
+        await Nova.request().post(`/nova-vendor/nova-notes/notes`, { note: data.note, type: data.type }, { params: this.params });
         await this.fetchNotes();
       } catch (e) {
         Nova.error(this.__('There was a problem submitting the form.'));
