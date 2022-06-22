@@ -72,10 +72,15 @@ class Note extends Model
         return $user->id === $createdBy->id;
     }
 
+    public function getTypeLabelAttribute()
+    {
+        return $this->attributes['type'] ? Types::get()->get($this->attributes['type']) : '';
+    }
+
     public function toArray()
     {
         $data = parent::toArray();
-        $data['type_label'] = $data['type'] ? Types::get()->get($data['type']) : '';
+        $data['type_label'] = $this->getTypeLabelAttribute();
         return $data;
     }
 }
