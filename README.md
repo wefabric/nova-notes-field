@@ -76,6 +76,39 @@ To add notes programmatically, use the method provided by the `HasNotes` trait:
 public function addNote($note, $user = true, $system = true)
 ```
 
+## Events
+
+The`OptimistDigital\NovaNotesField\Events\NoteAdded` event will be dispatched when a note is added.
+
+```php
+namespace OptimistDigital\NovaNotesField\Events;
+
+use Illuminate\Database\Eloquent\Model;
+use OptimistDigital\NovaNotesField\Models\Note;
+
+class NoteAdded
+{
+    /**
+     * @var Note
+     */
+    public Note $note;
+
+    /**
+     * @var Model
+     */
+    public Model $model;
+
+    /**
+     * @param Note $note
+     * @param Model $model
+     */
+    public function __construct(Note $note, Model $model)
+    {
+        $this->note = $note;
+        $this->model = $model;
+    }
+}
+```
 ## Configuration
 
 ### Publish configuration

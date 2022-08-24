@@ -3,6 +3,7 @@
 namespace OptimistDigital\NovaNotesField\Traits;
 
 use Illuminate\Support\Facades\Auth;
+use OptimistDigital\NovaNotesField\Events\NoteAdded;
 use OptimistDigital\NovaNotesField\Exceptions\UndefinedTypeException;
 use OptimistDigital\NovaNotesField\NotesFieldServiceProvider;
 use OptimistDigital\NovaNotesField\Types;
@@ -29,12 +30,16 @@ trait HasNotes
             throw new UndefinedTypeException(__(':type is undefined', ['type' => $type]));
         }
 
-        return $this->notes()->create([
+        $createdNote = $this->notes()->create([
             'text' => $note,
             'created_by' => isset($user) ? $user->id : null,
             'system' => $system,
             'type' => $type,
         ]);
+
+        event(new NoteAdded($createdNote, $this));
+
+        return $createdNote;
     }
 
     /**
